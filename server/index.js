@@ -1,19 +1,24 @@
 const http = require('http');
 const fs = require('fs');
+const url = require('url');
 
 const myserver = http.createServer((req,res) => {
+    if(req.url === '/favicon.ico') return res.end();  
     const log = `${new Date().toISOString()} - ${req.method} ${req.url}\n`;
+    const myUrl = url.parse(req.url, true);
+    console.log(myUrl);
     fs.appendFile('server.log', log, (err,data) => {
         if (err) {
             console.error('Error writing to log file:', err);
         }
 
-        switch (req.url) {
+        switch (myUrl.pathname) {
             case '/':
                 res.end('Welcome to the Home Page');
                 break;
             case '/about':
-                res.end('About Us');
+                const username = myUrl.query.myname || 'Guest';
+                res.end(`Welcome to the About Page, ${username}!`);
                 break;
             default:
                 res.end('Page Not Found');
