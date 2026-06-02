@@ -14,12 +14,25 @@ const myserver = http.createServer((req,res) => {
 
         switch (myUrl.pathname) {
             case '/':
-                res.end('Welcome to the Home Page');
+                if(req.method === 'GET') {
+                    res.end('Welcome to the Home Page');
+                }
                 break;
             case '/about':
                 const username = myUrl.query.myname || 'Guest';
                 res.end(`Welcome to the About Page, ${username}!`);
                 break;
+            case '/search':
+                const searchTerm = myUrl.query.q || 'Nothing';
+                res.end(`You searched for: ${searchTerm}`);
+                break;
+            case '/singup':
+                if(req.method === 'POST') {
+                    res.end('Signup successful!');
+                } else {
+                    res.end('Signup page');
+                }
+                break;    
             default:
                 res.end('Page Not Found');
         }
